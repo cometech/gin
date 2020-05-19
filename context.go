@@ -532,6 +532,15 @@ func (c *Context) get(m map[string][]string, key string) (map[string]string, boo
 	return dicts, exist
 }
 
+// SucceedWithFile
+func (c *Context) SucceedWithFile(name string, filename string, contentType string, content []byte) {
+	c.Writer.WriteHeader(http.StatusOK)
+	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
+	c.Header("Content-Type", contentType)
+	c.Header("Accept-Length", fmt.Sprintf("%d", len(content)))
+	c.Writer.Write(content)
+}
+
 // FormFile returns the first file for the provided form key.
 func (c *Context) FormFile(name string) (*multipart.FileHeader, error) {
 	if c.Request.MultipartForm == nil {
